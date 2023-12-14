@@ -1,5 +1,6 @@
 import numpy as np
 from pyod.models.copod import COPOD
+
 from utils.utils import format_data, plot_image
 
 
@@ -7,7 +8,7 @@ cols = 2
 rows = 784 // cols
 ratio = 2.65
 
-inds = [49, 53, 67, 55131, 55163, 55165, 55223, 55271, 55285, 55291, 55333]
+inds = [49, 53, 55131, 55163, 55165, 55223, 55271, 55285, 55291, 55333]
 searcher = COPOD()
 data = format_data()
 images = np.array([d.reshape((rows, cols)) for d in (data['images'])])
