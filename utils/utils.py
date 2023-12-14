@@ -5,7 +5,7 @@ from outliers import smirnov_grubbs as grubbs
 from sklearn.preprocessing import OneHotEncoder
 
 
-def plot_image(pixels: np.array):
+def plot_image(pixels: np.array) -> None:
     plt.imshow(pixels.reshape((28, 28)), cmap='gray')
     plt.show()
 
@@ -17,13 +17,10 @@ def clear_anomalies(array: np.ndarray, power: float | int = 2, k: float = 10**(-
         if ind == 0:
             ind = 1
         new_array.append(array[ind]*multiples[ind]**power)
-    clear_array = grubbs.max_test(new_array, k)
     clear_indices = grubbs.max_test_indices(new_array, k)
-    offset = 0
     for ind in clear_indices:
-        clear_array = np.insert(clear_array, ind+offset, 0.)
-        offset += 1
-    return clear_array
+        new_array[ind] = 0.
+    return np.array(new_array)
 
 
 def format_data(
@@ -45,11 +42,11 @@ def format_data(
             images.append(image)
     images = np.array(images)
 
-    np_labels = np.array(labels).reshape((-1, 1))
     encoder = OneHotEncoder(categories='auto')
+    np_labels = np.array(labels).reshape((-1, 1))
     np_labels_onehot = encoder.fit_transform(np_labels).toarray()
     data = {
         'images': images,
-        'np_labels_onehot': np_labels_onehot,
+        'labels': np_labels_onehot,
     }
     return data
